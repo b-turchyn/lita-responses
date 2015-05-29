@@ -1,6 +1,6 @@
 # lita-responses
 
-TODO: Add a description of the plugin.
+lita-responses allows users to set responses to things set in chat.
 
 ## Installation
 
@@ -12,8 +12,12 @@ gem "lita-responses"
 
 ## Configuration
 
-TODO: Describe any configuration attributes the plugin exposes.
+None
 
 ## Usage
 
-TODO: Describe the plugin's features and how to use them.
+Example: When "morning!" is said, respond with "And to you, as well!"
+```
+Lita: respond to "morning!" with "And to you, as well!"
+Lita: stop responding to "morning!"
+```
