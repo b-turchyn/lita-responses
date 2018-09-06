@@ -53,16 +53,16 @@ module Lita
       end
 
       def list_responses(response)
-        keys = redis.keys('lita-responses:*')
+        keys = redis.keys('lita-responses:*').sort
         responses = redis.mget(keys)
         body_pieces = []
 
-        for i in 0..keys.length |i|
-          body_pieces.push "\"#{keys[i]}\" ==> \"#{responses[i]}\""
+        for i in 0..keys.length
+          body_pieces.push("\"#{keys[i].gsub('lita-responses:', '')}\" ==> \"#{responses[i]}\"") if keys[i] != nil && responses[i] != nil
         end
 
         response.reply_privately body_pieces
-        response.reply_with_mention "Check your DMs!"
+        response.reply_with_mention "Check your DMs!" unless response.private_message?
       end
 
       def update_response(question, answer)
