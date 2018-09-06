@@ -23,6 +23,12 @@ module Lita
         )
 
         self.class.route(
+          %r{^list all responses$}i,
+          :list_responses,
+          command: true
+        )
+
+        self.class.route(
           %r{^(.+?)$}i,
           :lookup_response
         )
@@ -30,7 +36,7 @@ module Lita
 
       def add_response(response)
         puts "Adding response"
-        q = response.matches[0][0]
+        q = response.matches[0][0].strip
         a = response.matches[0][1]
 
         update_response q, a
@@ -44,6 +50,19 @@ module Lita
         remove q
 
         response.reply_with_mention "Consider it forgotten, cap'n!"
+      end
+
+      def list_responses(response)
+        keys = redis.keys('lita-responses:*')
+        responses = redis.mget(keys)
+        body_pieces = []
+
+        for i in 0..keys.length |i|
+          body_pieces.push "\"#{keys[i]}\" ==> \"#{responses[i]}\""
+        end
+
+        response.reply_privately body_pieces
+        response.reply_with_mention "Check your DMs!"
       end
 
       def update_response(question, answer)
